@@ -1,0 +1,28 @@
+body {
+    background-image: url("../images/bg.png");
+    max-width: 100%;
+    height: auto;
+}
+
+#input {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#output {
+    opacity: 0;
+}
+
+#forecastForCity {
+    opacity: 0;
+}
+
+#img {
+    width: 18%;
+}
+
+.res {
+    line-height: 50px;
+    /* background-color: rgba(128, 128, 128, 0.178); */
+}

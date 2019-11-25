@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather Forecast</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
+
+</head>
+
+<body>
+
+    <div class="container px-5 pt-4 pb-4 mt-4 border shadow ">
+
+        <header class="row text-white mb-1 text-center ">
+            <div class="col">
+                <h3 id="mainTitle">Weather Forecast</h3>
+            </div>
+        </header>
+
+        <!-- INPUT -->
+        <section class="row">
+            <div class="col-12 p-3 text-center">
+                <img id="img" src="./images/clouds.png">
+                <form>
+                    <h3 class="text-white">Enter City Name:</h3>
+                    <input type="text" id="input" class="p-2 form-control col-5 " placeholder="e.g. Athens">
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <div id="forecastForCity" class="text-white text-center mt-2"></div>
+
+    <!-- Table -->
+    <div class="container mt-2" id="output">
+        <section class="row">
+            <table class="table table-bordered table-hover text-center bg-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Temperature</th>
+                    <th>Humidity</th>
+                    <th>Min Temperature</th>
+                    <th>Max Temperature</th>
+                    <th>Wind Speed</th>
+                </tr>
+                <!-- Results -->
+                <tbody id="dataTable"></tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="js/search.js"></script>
+</body>
+
+</html>
