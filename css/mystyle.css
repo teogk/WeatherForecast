@@ -19,6 +19,10 @@ body {
     opacity: 0;
 }
 
+#backButton {
+    opacity: 0;
+}
+
 #img {
     width: 10%;
 }
@@ -28,6 +32,10 @@ body {
     /* background-color: rgba(128, 128, 128, 0.178); */
 }
 
-td {
+#dataTableWithDates {
     cursor: pointer;
+}
+
+#backButton:hover {
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.27), 0 17px 50px 0 rgba(0, 0, 0, 0.22);
 }

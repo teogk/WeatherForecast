@@ -32,7 +32,8 @@
                 <img id="img" src="./images/clouds.png">
                 <form>
                     <h3 class="text-white">Enter City Name:</h3>
-                    <input type="text" id="input" class=" form-control col-5 my-3" placeholder="e.g. Athens">
+                    <input type="text" id="input" class=" form-control col-5 my-3"
+                        placeholder="e.g. Athens">
                 </form>
             </div>
         </section>
@@ -51,11 +52,14 @@
                     <th>Humidity</th>
                     <th>Min Temperature</th>
                     <th>Max Temperature</th>
-                    <th>Wind Speed</th>
                 </tr>
                 <!-- Results -->
-                <tbody id="dataTable"></tbody>
+                <tbody id="dataTableWithDates"></tbody>
+                <tbody id="dataTableWithDateForecastEvery3Hours"></tbody>
             </table>
+            <button type="button" id="backButton" class="fa fa-arrow-left btn btn-success col-2 mb-4 p-3 mx-auto">
+                Back
+            </button>
         </section>
     </div>
 
