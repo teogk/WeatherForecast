@@ -33,29 +33,53 @@ function App($) {
     }
 
     function handleResponce(data) {
-
-        output.animate({ opacity: 1 }, 50);
-        forecastForCity.animate({ opacity: 1 }, 50);
         table.empty();
+
+        let dates = getDates(data);
 
         var city = '<h2>Weather forecast for ' + data.city.name + ', ' + data.city.country + '</h2>'
         forecastForCity.html(city);
-        for (i = 0; i < data.list.length; i += 8) {
 
-            let columnDate = "<td class='selectedDate'>" + data.list[i].dt_txt.substring(0, 10) + "</td>";
-            let columnDescription = "<td class='selectedDate'>" + capitalizeFirstLetter(data.list[i].weather[0].description) + "<img src='http://openweathermap.org/img/w/" + data.list[0].weather[0].icon + ".png'> " + "</td>";
-            let columnTemperature = "<td class='selectedDate'>" + data.list[i].main.temp + " &deg;C" + "</td>";
-            let columnHumidity = "<td class='selectedDate'>" + data.list[i].main.humidity + "%" + "</td>";
-            let columnMinTemperature = "<td class='selectedDate'>" + data.list[i].main.temp_min + "&deg;C" + "</td>";
-            let columnMaxTemperature = "<td class='selectedDate'>" + data.list[i].main.temp_max + "&deg;C" + "</td>";
-            let columnWindSpeed = "<td class='selectedDate'>" + data.list[i].wind.speed + " m/s" + "</td>";
+        for (i = 0; i < dates.length; i++) {
+            const dateDetails = getDetailsForDate(data.list, dates[i]);
 
-            let newRowContent = "<tr>" + columnDate + columnDescription + columnTemperature + columnHumidity + columnMinTemperature + columnMaxTemperature + columnWindSpeed + "</tr>";
+            let columnDate = "<td class='selectedDate'>" + dateDetails[0].dt_txt.substring(0, 10) + "</td>";
+            let columnDescription = "<td class='selectedDate'>" + capitalizeFirstLetter(dateDetails[0].weather[0].description) + "<img src='http://openweathermap.org/img/w/" + dateDetails[0].weather[0].icon + ".png'> " + "</td>";
+            let columnTemperature = "<td class='selectedDate'>" + dateDetails[0].main.temp + " &deg;C" + "</td>";
+            let columnHumidity = "<td class='selectedDate'>" + dateDetails[0].main.humidity + "%" + "</td>";
+            let columnMinTemperature = "<td class='selectedDate'>" + dateDetails[0].main.temp_min + "&deg;C" + "</td>";
+            let columnMaxTemperature = "<td class='selectedDate'>" + dateDetails[0].main.temp_max + "&deg;C" + "</td>";
+            let columnWindSpeed = "<td class='selectedDate'>" + dateDetails[0].wind.speed + " m/s" + "</td>";
+
+            let newRowContent = "<tr id='" + dateDetails[0].dt_txt.substring(0, 10) + "'>" + columnDate + columnDescription + columnTemperature + columnHumidity + columnMinTemperature + columnMaxTemperature + columnWindSpeed + "</tr>";
 
             table.append(newRowContent);
 
         }
 
+        output.animate({ opacity: 1 }, 50);
+        forecastForCity.animate({ opacity: 1 }, 50);
+    }
+
+    function getDates(data) {
+        let dates = [];
+        for (i = 0; i < data.list.length; i++) {
+            if (!dates.includes(data.list[i].dt_txt.substring(0, 10))) {
+                dates.push(data.list[i].dt_txt.substring(0, 10));
+            }
+        }
+        return dates;
+    }
+
+    function getDetailsForDate(list, date) {
+      
+        let dateValues = [];
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].dt_txt.substring(0, 10) == date) {
+                dateValues.push(list[i]);
+            }
+        }
+        return dateValues;
     }
     //Utils
     function capitalizeFirstLetter(string) {
