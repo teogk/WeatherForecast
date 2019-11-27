@@ -24,6 +24,7 @@ function App($) {
             output.animate({ opacity: 0 }, 1000);
             forecastForCity.animate({ opacity: 0 }, 1000);
             dataTableWithDates.empty();
+            weatherData = null;
         }
     }
 
@@ -32,11 +33,16 @@ function App($) {
         dataTableWithDateForecastEvery3Hours.empty();
 
         let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
-        let options = {
-            url: URL,
-            success: show5dayForecast
-        };
-        $.ajax(options);
+        if (weatherData == null) {
+            let options = {
+                url: URL,
+                success: show5dayForecast
+            };
+            $.ajax(options);
+        } else {
+            show5dayForecast(weatherData);
+        }
+
     }
 
     function show5dayForecast(data) {
@@ -120,6 +126,12 @@ function App($) {
         sessionStorage.setItem('dateId', dateId);
         showWeatherDataEvery3Hours(data);
     }
+
+    $(document).ready(function () {
+        $('#input').bind('paste', function (e) {
+            e.preventDefault();
+        });
+    });
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
