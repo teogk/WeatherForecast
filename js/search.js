@@ -20,12 +20,11 @@ function App($) {
         if (inputLength > 2) {
             clearTimeout(window.timer);
             window.timer = setTimeout(getForecast, 600); // blank period timeout to prevent wasteful of the server resources
-        } else if (inputLength <1) {
+        } else if (inputLength < 1) {
             clearTimeout(window.timer);
             forecastForCity.animate({ opacity: 0 }, 900);
             output.animate({ opacity: 0 }, 600);
             dataTableWithDates.empty();
-            weatherData = null;
         }
     }
 
@@ -33,20 +32,21 @@ function App($) {
         dataTableWithDateForecastEvery3Hours.empty();
 
         let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
-        if (weatherData == null) {
-            let options = {
-                url: URL,
-                success: show5dayForecast
-            };
-            $.ajax(options);
-        } else { //When back button pressed
-            show5dayForecast(weatherData);
-            backButtonDisplay(false);
-        }
+
+        let options = {
+            url: URL,
+            success: show5dayForecast
+        };
+        $.ajax(options);
+
+        // backButtonDisplay(false);
+
     }
 
     function show5dayForecast(data) {
         weatherData = data;
+        console.log(data.city.name);
+        console.log(weatherData.city.name);
         dataTableWithDates.empty();
         let dates = getDates(data);
         changeCursorTo("pointer");
