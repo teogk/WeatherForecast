@@ -3,7 +3,7 @@ jQuery(App);
 function App($) {
 
     const input = $("#input");
-    const output = $("#output");
+    const tableOutput = $("#tableOutput");
     const tableWith5dayForecast = $("#tableWith5dayForecast");
     const tableWithForecastEvery3Hours = $("#tableWithForecastEvery3Hours");
     const forecastForCity = $("#forecastForCity");
@@ -13,26 +13,20 @@ function App($) {
     input.focus();
     input.on("keyup", handleInput);
     input.on("paste", preventDefault);
-    backButton.on("click", handleButton);
-
-    function handleButton(URL) {
-        backButtonDisplay(false);
-        tableWithForecastEvery3Hours.empty();
-        show5dayForecast(weatherData);
-    }
+    backButton.on("click", handleBackButton);
 
     function handleInput() {
+        backButtonDisplay(false);
         const inputLength = input.val().length;
         if (inputLength > 2) {
             clearTimeout(window.timer);
             window.timer = setTimeout(getForecast, 600); // blank period timeout to prevent wasteful of the server resources
-        } else if (inputLength < 1) {
+        } else if (inputLength === 0) {
             clearTimeout(window.timer);
             forecastForCity.animate({ opacity: 0 }, 900);
-            output.animate({ opacity: 0 }, 600);
+            tableOutput.animate({ opacity: 0 }, 600);
             tableWith5dayForecast.empty();
             tableWithForecastEvery3Hours.empty();
-
         }
     }
 
@@ -41,23 +35,16 @@ function App($) {
 
         let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
         if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
-            console.log("kane klisi"); //////////////////////////////////////////////////////////////////////////////////////////
             let options = {
                 url: URL,
+                statusCode: { 404: handleError404 },
                 success: show5dayForecast
             };
             Smartjax.ajax(options);
         } else {
-            console.log("iparxei");////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             getDataFromSessionStorage(URL);
-            window.timer = setTimeout(clearTimer, 300000); // Clear Session Storage cache after 5 minutes
+            window.timer = setTimeout(clearSessionStorage, 300000); // Clear after 5 minutes
         }
-
-    }
-
-    function getDataFromSessionStorage(URL) {
-        const dataFromSessionStorage = JSON.parse(sessionStorage.getItem(URL));
-        show5dayForecast(dataFromSessionStorage);
     }
 
     function show5dayForecast(data) {
@@ -77,9 +64,15 @@ function App($) {
         $('tbody > tr').click(handleClickInTheSelectedDate);
 
         forecastForCity.animate({ opacity: 1 }, 50);
-        output.animate({ opacity: 1 }, 50);
+        tableOutput.animate({ opacity: 1 }, 50);
 
     }
+
+    function getDataFromSessionStorage(URL) {
+        const dataFromSessionStorage = JSON.parse(sessionStorage.getItem(URL));
+        show5dayForecast(dataFromSessionStorage);
+    }
+
     function showWeatherDataEvery3Hours() {
         const selectedDate = sessionStorage.getItem('dateId');
         tableWith5dayForecast.empty();
@@ -89,9 +82,14 @@ function App($) {
             populateTableWith(dateDetails[i], false);
         }
         forecastForCity.animate({ opacity: 1 }, 50);
-        output.animate({ opacity: 1 }, 50);
+        tableOutput.animate({ opacity: 1 }, 50);
     }
-    //Utils
+
+    function handleBackButton() {
+        backButtonDisplay(false);
+        tableWithForecastEvery3Hours.empty();
+        show5dayForecast(weatherData);
+    }
 
     function populateTableWith(details, showOnlyDate) {
         const description = capitalizeFirstLetter(details.weather[0].description);
@@ -123,7 +121,6 @@ function App($) {
     }
 
     function getDetailsForDate(list, date) {
-
         let dateValues = [];
         for (let i = 0; i < list.length; i++) {
             if (list[i].dt_txt.substring(5, 10) == date) {
@@ -157,6 +154,13 @@ function App($) {
         }
     }
 
+    function handleError404() {
+        forecastForCity.html("No results found. Please try a different location").animate({ opacity: 1 }, 1000);
+        tableOutput.animate({ opacity: 0 }, 100);
+        tableWith5dayForecast.empty();
+        tableWithForecastEvery3Hours.empty();
+    }
+
     function preventDefault(e) {
         e.preventDefault();
     };
@@ -165,7 +169,7 @@ function App($) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    function clearTimer() {
+    function clearSessionStorage() {
         sessionStorage.clear();
     }
 }

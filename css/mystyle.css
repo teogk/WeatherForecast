@@ -12,7 +12,7 @@ body {
     margin-left: auto;
 }
 
-#forecastForCity, #output {
+#forecastForCity, #tableOutput {
     opacity: 0;
 }
 
