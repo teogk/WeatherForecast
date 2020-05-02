@@ -4,8 +4,8 @@ function App($) {
 
     const input = $("#input");
     const output = $("#output");
-    const dataTableWithDates = $("#dataTableWithDates");
-    const dataTableWithDateForecastEvery3Hours = $("#dataTableWithDateForecastEvery3Hours");
+    const tableWith5dayForecast = $("#tableWith5dayForecast");
+    const tableWithForecastEvery3Hours = $("#tableWithForecastEvery3Hours");
     const forecastForCity = $("#forecastForCity");
     const backButton = $('#backButton');
     let weatherData;
@@ -17,7 +17,7 @@ function App($) {
 
     function handleButton(URL) {
         backButtonDisplay(false);
-        dataTableWithDateForecastEvery3Hours.empty();
+        tableWithForecastEvery3Hours.empty();
         show5dayForecast(weatherData);
     }
 
@@ -30,14 +30,14 @@ function App($) {
             clearTimeout(window.timer);
             forecastForCity.animate({ opacity: 0 }, 900);
             output.animate({ opacity: 0 }, 600);
-            dataTableWithDates.empty();
-            dataTableWithDateForecastEvery3Hours.empty();
+            tableWith5dayForecast.empty();
+            tableWithForecastEvery3Hours.empty();
 
         }
     }
 
     function getForecast() {
-        dataTableWithDateForecastEvery3Hours.empty();
+        tableWithForecastEvery3Hours.empty();
 
         let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
         if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
@@ -50,22 +50,19 @@ function App($) {
         } else {
             console.log("iparxei");////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             getDataFromSessionStorage(URL);
-            window.timer = setTimeout(clearTimer, 300000);
+            window.timer = setTimeout(clearTimer, 300000); // Clear Session Storage cache after 5 minutes
         }
 
     }
 
     function getDataFromSessionStorage(URL) {
         const dataFromSessionStorage = JSON.parse(sessionStorage.getItem(URL));
-        dataTableWithDateForecastEvery3Hours.empty();
         show5dayForecast(dataFromSessionStorage);
-
     }
-
 
     function show5dayForecast(data) {
         weatherData = data;
-        dataTableWithDates.empty();
+        tableWith5dayForecast.empty();
         let dates = getDates(data);
         changeCursorTo("pointer");
 
@@ -77,7 +74,7 @@ function App($) {
 
             populateTableWith(dateDetails[0], true);
         }
-        $('tbody > tr').click(showDateDetails);
+        $('tbody > tr').click(handleClickInTheSelectedDate);
 
         forecastForCity.animate({ opacity: 1 }, 50);
         output.animate({ opacity: 1 }, 50);
@@ -85,7 +82,7 @@ function App($) {
     }
     function showWeatherDataEvery3Hours() {
         const selectedDate = sessionStorage.getItem('dateId');
-        dataTableWithDates.empty();
+        tableWith5dayForecast.empty();
 
         const dateDetails = getDetailsForDate(weatherData.list, selectedDate);
         for (let i = 0; i < dateDetails.length; i++) {
@@ -112,7 +109,7 @@ function App($) {
         const columnMaxTemperature = "<td>" + details.main.temp_max + "&deg;C" + "</td>";
 
         const newRowContent = "<tr id='" + dateTxt + "'>" + columnDate + columnDescription + columnTemperature + columnHumidity + columnMinTemperature + columnMaxTemperature + "</tr>";
-        dataTableWithDates.append(newRowContent);
+        tableWith5dayForecast.append(newRowContent);
     }
 
     function getDates(data) {
@@ -136,7 +133,7 @@ function App($) {
         return dateValues;
     }
 
-    function showDateDetails(data) {
+    function handleClickInTheSelectedDate(data) {
         let dateId = $(this).closest('tr').attr('id');
         sessionStorage.setItem('dateId', dateId);
         changeCursorTo("default_");
