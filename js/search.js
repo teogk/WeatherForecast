@@ -13,7 +13,13 @@ function App($) {
     input.focus();
     input.on("keyup", handleInput);
     input.on("paste", preventDefault);
-    backButton.click(getForecast);
+    backButton.on("click", handleButton);
+
+    function handleButton(URL) {
+        backButtonDisplay(false);
+        dataTableWithDateForecastEvery3Hours.empty();
+        show5dayForecast(weatherData);
+    }
 
     function handleInput() {
         const inputLength = input.val().length;
@@ -25,6 +31,8 @@ function App($) {
             forecastForCity.animate({ opacity: 0 }, 900);
             output.animate({ opacity: 0 }, 600);
             dataTableWithDates.empty();
+            dataTableWithDateForecastEvery3Hours.empty();
+
         }
     }
 
@@ -32,21 +40,31 @@ function App($) {
         dataTableWithDateForecastEvery3Hours.empty();
 
         let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
-
-        let options = {
-            url: URL,
-            success: show5dayForecast
-        };
-        $.ajax(options);
-
-        // backButtonDisplay(false);
+        if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
+            console.log("kane klisi"); //////////////////////////////////////////////////////////////////////////////////////////
+            let options = {
+                url: URL,
+                success: show5dayForecast
+            };
+            Smartjax.ajax(options);
+        } else {
+            console.log("iparxei");////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            getDataFromSessionStorage(URL);
+            window.timer = setTimeout(clearTimer, 300000);
+        }
 
     }
 
+    function getDataFromSessionStorage(URL) {
+        const dataFromSessionStorage = JSON.parse(sessionStorage.getItem(URL));
+        dataTableWithDateForecastEvery3Hours.empty();
+        show5dayForecast(dataFromSessionStorage);
+
+    }
+
+
     function show5dayForecast(data) {
         weatherData = data;
-        console.log(data.city.name);
-        console.log(weatherData.city.name);
         dataTableWithDates.empty();
         let dates = getDates(data);
         changeCursorTo("pointer");
@@ -120,7 +138,6 @@ function App($) {
 
     function showDateDetails(data) {
         let dateId = $(this).closest('tr').attr('id');
-        sessionStorage.clear();
         sessionStorage.setItem('dateId', dateId);
         changeCursorTo("default_");
         backButtonDisplay(true);
@@ -149,5 +166,9 @@ function App($) {
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    function clearTimer() {
+        sessionStorage.clear();
     }
 }
