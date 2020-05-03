@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Weather Forecast</title>
+    <meta name="description" content="5 day and hourly forecasts based on the location that you want">
+    <title>Weather Forecast | 5 day forecast is available at any location or city</title>
     <link rel="icon" type="image/png" href="images/clouds.png" />
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
@@ -13,58 +14,62 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    
     <link rel="stylesheet" type="text/css" href="css/mystyle.css">
-
 </head>
 
 <body>
 
-    <div class="container my-3 border shadow ">
+    <div class="container my-3 border shadow">
 
         <header class="row text-white mt-2 text-center ">
             <div class="col-12">
                 <h3 id="mainTitle">Weather Forecast</h3>
+                <a href="index.html" title="Weather Forecast">
+                    <img id="logo" src="images/clouds.png" alt="img-logo">
+                </a>
             </div>
         </header>
 
-        <!-- INPUT -->
+        <!-- Input -->
         <section class="row">
             <div class="col-12 text-center">
-                <img id="img" src="./images/clouds.png">
                 <form>
-                    <h3 class="text-white">Enter City Name:</h3>
-                    <input type="text" id="input" class=" form-control col-5 my-3" placeholder="e.g. Athens">
+                    <input type="text" id="input" class=" form-control col-5 my-3"
+                        placeholder="&#128269; Enter a city name">
                 </form>
             </div>
         </section>
     </div>
 
-    <div id="forecastForCity" class="text-white text-center mt-2"></div>
+    <div id="forecastForCity" class="text-white text-center my-3"></div>
 
-    <!-- Table -->
-    <div class="container mt-2" id="output">
+    <div class="container mt-2">
         <section class="row">
-            <table class="table table-bordered table-hover text-center bg-light">
-                <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Temperature</th>
-                    <th>Humidity</th>
-                    <th>Min Temperature</th>
-                    <th>Max Temperature</th>
-                </tr>
+            <!-- Table -->
+            <table class="table text-white text-center" id="tableOutput">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                        <th>Min Temp.</th>
+                        <th>Max Temp.</th>
+                    </tr>
+                </thead>
                 <!-- Results -->
-                <tbody id="dataTableWithDates"></tbody>
-                <tbody id="dataTableWithDateForecastEvery3Hours"></tbody>
+                <tbody id="tbody_5dayForecast"></tbody>
+                <tbody id="tbody_ForecastEvery3Hours"></tbody>
             </table>
-            <button type="button" id="backButton" class="fa fa-arrow-left btn btn-success col-2 mb-4 p-3 mx-auto">
+            <!-- Button -->
+            <button type="button" id="backButton" class="fa fa-arrow-left btn btn-success col-lg-2 col-3 mb-4 p-3 mx-auto">
                 Back
             </button>
         </section>
     </div>
 
     <script src="js/search.js"></script>
+    <script src="js/smartjax.min.js"></script>
 </body>
 
 </html>
