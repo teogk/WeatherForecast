@@ -4,8 +4,8 @@ function App($) {
 
     const input = $("#input");
     const tableOutput = $("#tableOutput");
-    const tableWith5dayForecast = $("#tableWith5dayForecast");
-    const tableWithForecastEvery3Hours = $("#tableWithForecastEvery3Hours");
+    const tbody_5dayForecast = $("#tbody_5dayForecast");
+    const tbody_ForecastEvery3Hours = $("#tbody_ForecastEvery3Hours");
     const forecastForCity = $("#forecastForCity");
     const backButton = $('#backButton');
     let weatherData;
@@ -19,18 +19,18 @@ function App($) {
         if (inputLength > 2) {
             clearTimeout(window.timer);
             window.timer = setTimeout(getForecast, 700); // Blank period timeout to prevent wasteful of the server resources
-        } else {
+        } else if (inputLength === 0) {
             clearTimeout(window.timer);
             backButtonDisplay(false);
             forecastForCity.animate({ opacity: 0 }, 900);
             tableOutput.animate({ opacity: 0 }, 600);
-            tableWith5dayForecast.empty();
-            tableWithForecastEvery3Hours.empty();
+            tbody_5dayForecast.empty();
+            tbody_ForecastEvery3Hours.empty();
         }
     }
 
     function getForecast() {
-        tableWithForecastEvery3Hours.empty();
+        tbody_ForecastEvery3Hours.empty();
 
         let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
         if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
@@ -47,9 +47,9 @@ function App($) {
     }
 
     function show5dayForecast(data) {
-        weatherData = data;
-        tableWith5dayForecast.empty();
         let dates = getDates(data);
+        weatherData = data;
+        tbody_5dayForecast.empty();
         changeCursorTo("pointer");
 
         const city = '<h2>Weather forecast for ' + data.city.name + ', ' + data.city.country + '</h2>'
@@ -73,7 +73,7 @@ function App($) {
 
     function showWeatherDataEvery3Hours() {
         const selectedDate = sessionStorage.getItem('dateId');
-        tableWith5dayForecast.empty();
+        tbody_5dayForecast.empty();
 
         const dateDetails = getDetailsForDate(weatherData.list, selectedDate);
         for (let i = 0; i < dateDetails.length; i++) {
@@ -83,7 +83,7 @@ function App($) {
     }
 
     function handleBackButton() {
-        tableWithForecastEvery3Hours.empty();
+        tbody_ForecastEvery3Hours.empty();
         show5dayForecast(weatherData);
     }
 
@@ -103,7 +103,7 @@ function App($) {
         const columnMaxTemperature = "<td>" + details.main.temp_max + "&deg;C" + "</td>";
 
         const newRowContent = "<tr id='" + dateTxt + "'>" + columnDate + columnDescription + columnTemperature + columnHumidity + columnMinTemperature + columnMaxTemperature + "</tr>";
-        tableWith5dayForecast.append(newRowContent);
+        tbody_5dayForecast.append(newRowContent);
     }
 
     function getDates(data) {
@@ -152,8 +152,8 @@ function App($) {
     function handleError404() {
         forecastForCity.html("No results found. Please try a different location").animate({ opacity: 1 }, 1000);
         tableOutput.animate({ opacity: 0 }, 100);
-        tableWith5dayForecast.empty();
-        tableWithForecastEvery3Hours.empty();
+        tbody_5dayForecast.empty();
+        tbody_ForecastEvery3Hours.empty();
     }
 
     function capitalizeFirstLetter(string) {
