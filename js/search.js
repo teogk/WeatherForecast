@@ -15,11 +15,10 @@ function App($) {
     backButton.on("click", handleBackButton);
 
     function handleInput() {
-        backButtonDisplay(false);
         const inputLength = input.val().length;
         if (inputLength > 2) {
             clearTimeout(window.timer);
-            window.timer = setTimeout(getForecast, 700); // blank period timeout to prevent wasteful of the server resources
+            window.timer = setTimeout(getForecast, 700); // Blank period timeout to prevent wasteful of the server resources
         } else if (inputLength === 0) {
             clearTimeout(window.timer);
             forecastForCity.animate({ opacity: 0 }, 900);
@@ -42,8 +41,8 @@ function App($) {
             Smartjax.ajax(options);
         } else {
             getDataFromSessionStorage(URL);
-            window.timer = setTimeout(clearSessionStorage, 300000); // Clear after 5 minutes
         }
+        window.timer = setTimeout(clearSessionStorage, 300000); // Clear after 5 minutes
     }
 
     function show5dayForecast(data) {
@@ -57,13 +56,13 @@ function App($) {
 
         for (i = 0; i < dates.length; i++) {
             const dateDetails = getDetailsForDate(data.list, dates[i]);
-
             populateTableWith(dateDetails[0], true);
         }
         $('tbody > tr').click(handleClickInTheSelectedDate);
 
-        forecastForCity.animate({ opacity: 1 }, 50);
-        tableOutput.animate({ opacity: 1 }, 50);
+        forecastForCity.css('opacity', '1');
+        tableOutput.css('opacity', '1');
+        backButtonDisplay(false);
     }
 
     function getDataFromSessionStorage(URL) {
@@ -79,12 +78,10 @@ function App($) {
         for (let i = 0; i < dateDetails.length; i++) {
             populateTableWith(dateDetails[i], false);
         }
-        forecastForCity.animate({ opacity: 1 }, 50);
-        tableOutput.animate({ opacity: 1 }, 50);
+        backButtonDisplay(true);
     }
 
     function handleBackButton() {
-        backButtonDisplay(false);
         tableWithForecastEvery3Hours.empty();
         show5dayForecast(weatherData);
     }
@@ -93,9 +90,9 @@ function App($) {
         const description = capitalizeFirstLetter(details.weather[0].description);
         let dateTxt;
         if (showOnlyDate) {
-            dateTxt = details.dt_txt.substring(5, 10); //month-day
+            dateTxt = details.dt_txt.substring(5, 10); // month-day (5 day Forecast)
         } else {
-            dateTxt = details.dt_txt.substring(5, 16); //month-day hour:minutes
+            dateTxt = details.dt_txt.substring(5, 16); // month-day hour:minutes (Forecast Every 3 Hours)
         }
         const columnDate = "<td>" + dateTxt + "</td>";
         const columnDescription = "<td>" + "<img src='http://openweathermap.org/img/w/" + details.weather[0].icon + ".png' class='descriptionImg img-fluid' alt='" + description + "' title='" + description + "'>" + "</td>";
@@ -132,7 +129,6 @@ function App($) {
         let dateId = $(this).closest('tr').attr('id');
         sessionStorage.setItem('dateId', dateId);
         changeCursorTo("default_");
-        backButtonDisplay(true);
         showWeatherDataEvery3Hours(data);
     }
 
