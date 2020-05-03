@@ -17,7 +17,7 @@ body {
 }
 
 #backButton {
-    display: none
+    display: none;
 }
 
 #backButton:hover {

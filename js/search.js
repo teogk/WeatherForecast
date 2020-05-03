@@ -11,8 +11,7 @@ function App($) {
     let weatherData;
 
     input.focus();
-    input.on("keyup", handleInput);
-    input.on("paste", preventDefault);
+    input.on("input", handleInput);
     backButton.on("click", handleBackButton);
 
     function handleInput() {
@@ -20,7 +19,7 @@ function App($) {
         const inputLength = input.val().length;
         if (inputLength > 2) {
             clearTimeout(window.timer);
-            window.timer = setTimeout(getForecast, 600); // blank period timeout to prevent wasteful of the server resources
+            window.timer = setTimeout(getForecast, 700); // blank period timeout to prevent wasteful of the server resources
         } else if (inputLength === 0) {
             clearTimeout(window.timer);
             forecastForCity.animate({ opacity: 0 }, 900);
@@ -65,7 +64,6 @@ function App($) {
 
         forecastForCity.animate({ opacity: 1 }, 50);
         tableOutput.animate({ opacity: 1 }, 50);
-
     }
 
     function getDataFromSessionStorage(URL) {
@@ -160,10 +158,6 @@ function App($) {
         tableWith5dayForecast.empty();
         tableWithForecastEvery3Hours.empty();
     }
-
-    function preventDefault(e) {
-        e.preventDefault();
-    };
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);

@@ -24,17 +24,18 @@
         <header class="row text-white mt-2 text-center ">
             <div class="col-12">
                 <h3 id="mainTitle">Weather Forecast</h3>
+                <a href="index.html" title="Weather Forecast">
+                    <img id="logo" src="images/clouds.png" alt="img-logo">
+                </a>
             </div>
         </header>
 
         <!-- Input -->
         <section class="row">
             <div class="col-12 text-center">
-                <a href="index.html" title="Weather Forecast">
-                    <img id="logo" src="images/clouds.png" alt="img-logo">
-                </a>
                 <form>
-                    <input type="text" id="input" class=" form-control col-5 my-3" placeholder="&#128269; Enter a city name">
+                    <input type="text" id="input" class=" form-control col-5 my-3"
+                        placeholder="&#128269; Enter a city name">
                 </form>
             </div>
         </section>
@@ -57,7 +58,7 @@
                     </tr>
                 </thead>
                 <!-- Results -->
-                <tbody id="tableWith5dayForecast" class="teo"></tbody>
+                <tbody id="tableWith5dayForecast"></tbody>
                 <tbody id="tableWithForecastEvery3Hours"></tbody>
             </table>
             <button type="button" id="backButton"
