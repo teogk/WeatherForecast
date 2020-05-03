@@ -19,7 +19,7 @@ function App($) {
         if (inputLength > 2) {
             clearTimeout(window.timer);
             window.timer = setTimeout(getForecast, 700); // Blank period timeout to prevent wasteful of the server resources
-        } else if (inputLength === 0) {
+        } else {
             clearTimeout(window.timer);
             forecastForCity.animate({ opacity: 0 }, 900);
             tableOutput.animate({ opacity: 0 }, 600);
