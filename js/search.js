@@ -21,6 +21,7 @@ function App($) {
             window.timer = setTimeout(getForecast, 700); // Blank period timeout to prevent wasteful of the server resources
         } else {
             clearTimeout(window.timer);
+            backButtonDisplay(false);
             forecastForCity.animate({ opacity: 0 }, 900);
             tableOutput.animate({ opacity: 0 }, 600);
             tableWith5dayForecast.empty();
