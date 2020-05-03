@@ -24,8 +24,6 @@ function App($) {
             backButtonDisplay(false);
             forecastForCity.animate({ opacity: 0 }, 900);
             tableOutput.animate({ opacity: 0 }, 600);
-            tbody_5dayForecast.empty();
-            tbody_ForecastEvery3Hours.empty();
         }
     }
 
