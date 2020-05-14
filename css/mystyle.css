@@ -1,8 +1,7 @@
 body {
-    background: rgba(0, 0, 0, .30) url('../images/skyBackground.jpg');
+    background: url('../images/skyBackground.jpg');
     background-attachment: fixed;
     background-position: center;
-    background-blend-mode: darken;
     margin: 5px;
 }
 
