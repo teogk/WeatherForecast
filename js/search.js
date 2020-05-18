@@ -51,10 +51,10 @@ function App($) {
         tbody_5dayForecast.empty();
         changeCursorTo("pointer");
 
-        const city = '<h2>Weather forecast for ' + data.city.name + ', ' + data.city.country + '</h2>'
+        const city = `<h2>Weather forecast for ${data.city.name}, ${data.city.country}</h2>`;
         forecastForCity.html(city);
 
-        for (i = 0; i < dates.length; i++) {
+        for (let i = 0; i < dates.length; i++) {
             const dateDetails = getDetailsForDate(data.list, dates[i]);
             populateTableWith(dateDetails[0], true);
         }
@@ -94,35 +94,37 @@ function App($) {
         } else {
             dateTxt = details.dt_txt.substring(5, 16); // month-day hour:minutes (Forecast Every 3 Hours)
         }
-        const columnDate = "<td>" + dateTxt + "</td>";
-        const columnDescription = "<td>" + "<img src='http://openweathermap.org/img/w/" + details.weather[0].icon + ".png' class='descriptionImg img-fluid' alt='" + description + "' title='" + description + "'>" + "</td>";
-        const columnTemperature = "<td>" + details.main.temp + " &deg;C" + "</td>";
-        const columnHumidity = "<td>" + details.main.humidity + "%" + "</td>";
-        const columnMinTemperature = "<td>" + details.main.temp_min + "&deg;C" + "</td>";
-        const columnMaxTemperature = "<td>" + details.main.temp_max + "&deg;C" + "</td>";
+        const columnDate = `<td>${dateTxt}</td>`;
+        const columnDescription = `<td><img src="http://openweathermap.org/img/w/${details.weather[0].icon}.png" class="descriptionImg img-fluid" alt="${description}" title="${description}"></td>`;
+        const columnTemperature = `<td>${details.main.temp}&deg;C</td>`;
+        const columnHumidity = `<td>${details.main.humidity}%</td>`;
+        const columnMinTemperature = `<td>${details.main.temp_min}&deg;C</td>`;
+        const columnMaxTemperature = `<td>${details.main.temp_max}&deg;C</td>`;
 
-        const newRowContent = "<tr id='" + dateTxt + "'>" + columnDate + columnDescription + columnTemperature + columnHumidity + columnMinTemperature + columnMaxTemperature + "</tr>";
+        const newRowContent = `<tr id="${dateTxt}"> ${columnDate} ${columnDescription} ${columnTemperature} ${columnHumidity} ${columnMinTemperature} ${columnMaxTemperature}</tr>`;
         tbody_5dayForecast.append(newRowContent);
     }
 
     function getDates(data) {
         let dates = [];
-        for (i = 0; i < data.list.length; i++) {
-            if (!dates.includes(data.list[i].dt_txt.substring(5, 10))) {
-                dates.push(data.list[i].dt_txt.substring(5, 10));
+        for (let i = 0; i < data.list.length; i++) {
+            const date = data.list[i].dt_txt.substring(5, 10);
+            if (!dates.includes(date)) {
+                dates.push(date);
             }
         }
         return dates;
     }
 
     function getDetailsForDate(list, date) {
-        let dateValues = [];
+        let dateDetails = [];
         for (let i = 0; i < list.length; i++) {
-            if (list[i].dt_txt.substring(5, 10) == date) {
-                dateValues.push(list[i]);
+            const listDate = list[i].dt_txt.substring(5, 10);
+            if (listDate === date) {
+                dateDetails.push(list[i]);
             }
         }
-        return dateValues;
+        return dateDetails;
     }
 
     function handleClickInTheSelectedDate(data) {
@@ -140,8 +142,8 @@ function App($) {
         }
     }
 
-    function backButtonDisplay(bool) {
-        if (bool) {
+    function backButtonDisplay(show) {
+        if (show) {
             backButton.delay(60).show(0);
         } else {
             backButton.hide();
