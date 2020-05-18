@@ -29,9 +29,9 @@ function App($) {
 
     function getForecast() {
 
-        let URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
+        const URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
         if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
-            let options = {
+            const options = {
                 url: URL,
                 statusCode: { 404: handleError404 },
                 success: show5dayForecast
@@ -44,7 +44,7 @@ function App($) {
     }
 
     function show5dayForecast(data) {
-        let dates = getDates(data);
+        const dates = getDates(data);
         weatherData = data;
         tbody_forecast.empty();
         changeCursorTo("pointer");
@@ -103,7 +103,7 @@ function App($) {
     }
 
     function getDates(data) {
-        let dates = [];
+        const dates = [];
         for (let i = 0; i < data.list.length; i++) {
             const date = data.list[i].dt_txt.substring(5, 10);
             if (!dates.includes(date)) {
@@ -114,7 +114,7 @@ function App($) {
     }
 
     function getDetailsForDate(list, date) {
-        let dateDetails = [];
+        const dateDetails = [];
         for (let i = 0; i < list.length; i++) {
             const listDate = list[i].dt_txt.substring(5, 10);
             if (listDate === date) {
@@ -125,7 +125,7 @@ function App($) {
     }
 
     function handleClickInTheSelectedDate(data) {
-        let dateId = $(this).closest('tr').attr('id');
+        const dateId = $(this).closest('tr').attr('id');
         sessionStorage.setItem('dateId', dateId);
         changeCursorTo("default_");
         showWeatherDataEvery3Hours(data);
