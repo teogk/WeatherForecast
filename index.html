@@ -23,7 +23,7 @@
 
         <header class="row text-white mt-2 text-center ">
             <div class="col-12">
-                <h3 id="mainTitle">Weather Forecast</h3>
+                <h3>Weather Forecast</h3>
                 <a href="index.html" title="Weather Forecast">
                     <img id="logo" src="images/logo.png" alt="img-logo">
                 </a>
@@ -31,20 +31,19 @@
         </header>
 
         <!-- Input -->
-        <section class="row">
+        <div class="row">
             <div class="col-12 text-center">
                 <form>
-                    <input type="text" id="input" class=" form-control col-5 my-3"
-                        placeholder="&#128269; Enter a city name">
+                    <input type="text" id="input" class=" form-control col-5 my-3" placeholder="&#128269; Enter a city name">
                 </form>
             </div>
-        </section>
+        </div>
     </div>
 
-    <div id="forecastForCity" class="text-white text-center my-3"></div>
+    <div id="forecastLocation" class="text-white text-center my-3"></div>
 
     <div class="container mt-2">
-        <section class="row">
+        <div class="row">
             <!-- Table -->
             <table class="table text-white text-center" id="tableOutput">
                 <thead>
@@ -64,7 +63,7 @@
             <button type="button" id="backButton" class="fa fa-arrow-left btn btn-success col-lg-2 col-3 mb-4 p-3 mx-auto">
                 Back
             </button>
-        </section>
+        </div>
     </div>
 
     <script src="js/search.js"></script>

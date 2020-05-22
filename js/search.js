@@ -4,7 +4,7 @@ function App($) {
 
     const input = $("#input");
     const tableOutput = $("#tableOutput");
-    const forecastForCity = $("#forecastForCity");
+    const forecastLocation = $("#forecastLocation");
     const tbody_forecast = $("#tbody_forecast");
     const backButton = $('#backButton');
     let weatherData;
@@ -21,16 +21,15 @@ function App($) {
         } else if (inputLength === 0) {
             clearTimeout(window.timer);
             backButtonDisplay(false);
-            forecastForCity.animate({ opacity: 0 }, 900);
+            forecastLocation.animate({ opacity: 0 }, 900);
             tableOutput.animate({ opacity: 0 }, 600);
             tbody_forecast.empty();
         }
     }
 
     function getForecast() {
-
         const URL = "https://api.openweathermap.org/data/2.5/forecast?q=" + input.val() + "&units=metric" + "&appid=f60f25502d741d7b0dc7d58de36d5ea7";
-        if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
+        if (sessionStorage.getItem(URL) == null) { // Make the call if url isn't cached
             const options = {
                 url: URL,
                 statusCode: { 404: handleError404 },
@@ -44,22 +43,19 @@ function App($) {
     }
 
     function show5dayForecast(data) {
-        const dates = getDates(data);
+        const days = getDates(data);
         weatherData = data;
         tbody_forecast.empty();
-        changeCursorTo("pointer");
 
-        const city = `<h2>Weather forecast for ${data.city.name}, ${data.city.country}</h2>`;
-        forecastForCity.html(city);
+        populateForecastLocation(data, true);
+        days.forEach(day => {
+            const dayDetails = getDetailsForDate(data.list, day);
+            populateTableWith(dayDetails[0], true);
+        });
 
-        for (let i = 0; i < dates.length; i++) {
-            const dateDetails = getDetailsForDate(data.list, dates[i]);
-            populateTableWith(dateDetails[0], true);
-        }
-        $('tbody > tr').click(handleClickInTheSelectedDate);
-
-        forecastForCity.css('opacity', '1');
+        $("tbody > tr").on("click", handleTheSelectedDate);
         tableOutput.css('opacity', '1');
+        change_tbody_CursorTo("pointer");
         backButtonDisplay(false);
     }
 
@@ -68,38 +64,14 @@ function App($) {
         show5dayForecast(dataFromSessionStorage);
     }
 
-    function showWeatherDataEvery3Hours() {
-        const selectedDate = sessionStorage.getItem('dateId');
+    function show3HourForecastForThe(selectedDate) {
+        const dayDetails = getDetailsForDate(weatherData.list, selectedDate);
         tbody_forecast.empty();
-
-        const dateDetails = getDetailsForDate(weatherData.list, selectedDate);
-        for (let i = 0; i < dateDetails.length; i++) {
-            populateTableWith(dateDetails[i], false);
-        }
-        backButtonDisplay(true);
+        dayDetails.forEach(hourDetails => { populateTableWith(hourDetails, false); });
     }
 
     function handleBackButton() {
         show5dayForecast(weatherData);
-    }
-
-    function populateTableWith(details, showOnlyDate) {
-        const description = capitalizeFirstLetter(details.weather[0].description);
-        let dateTxt;
-        if (showOnlyDate) {
-            dateTxt = details.dt_txt.substring(5, 10); // month-day (5 day Forecast)
-        } else {
-            dateTxt = details.dt_txt.substring(5, 16); // month-day hour:minutes (Forecast Every 3 Hours)
-        }
-        const columnDate = `<td>${dateTxt}</td>`;
-        const columnDescription = `<td><img src="http://openweathermap.org/img/w/${details.weather[0].icon}.png" class="descriptionImg img-fluid" alt="${description}" title="${description}"></td>`;
-        const columnTemperature = `<td>${details.main.temp}&deg;C</td>`;
-        const columnHumidity = `<td>${details.main.humidity}%</td>`;
-        const columnMinTemperature = `<td>${details.main.temp_min}&deg;C</td>`;
-        const columnMaxTemperature = `<td>${details.main.temp_max}&deg;C</td>`;
-
-        const newRowContent = `<tr id="${dateTxt}"> ${columnDate} ${columnDescription} ${columnTemperature} ${columnHumidity} ${columnMinTemperature} ${columnMaxTemperature}</tr>`;
-        tbody_forecast.append(newRowContent);
     }
 
     function getDates(data) {
@@ -124,14 +96,56 @@ function App($) {
         return dateDetails;
     }
 
-    function handleClickInTheSelectedDate(data) {
-        const dateId = $(this).closest('tr').attr('id');
-        sessionStorage.setItem('dateId', dateId);
-        changeCursorTo("default_");
-        showWeatherDataEvery3Hours(data);
+    function handleTheSelectedDate() {
+        const selectedDate = $(this).closest('tr').attr('id');
+        change_tbody_CursorTo("default_");
+        backButtonDisplay(true);
+        show3HourForecastForThe(selectedDate);
     }
 
-    function changeCursorTo(cursorType) {
+    function clearSessionStorage() {
+        sessionStorage.clear();
+    }
+
+    function handleError404() {
+        backButtonDisplay(false);
+        tableOutput.animate({ opacity: 0 }, 0);
+        tbody_forecast.empty();
+        populateForecastLocation(false);
+    }
+
+    // HTML handling Start
+
+    function populateForecastLocation(data, successfulAPIcall) {
+        let text;
+        if (successfulAPIcall) {
+            text = `<h2>Weather forecast for ${data.city.name}, ${data.city.country}</h2>`;
+        } else {
+            text = "No results found. Please try a different location";
+        }
+        forecastLocation.html(text).css("opacity", "1");
+    }
+
+    function populateTableWith(details, showOnlyDate) {
+        const description = capitalizeFirstLetter(details.weather[0].description);
+        let dateTxt;
+        if (showOnlyDate) {
+            dateTxt = details.dt_txt.substring(5, 10); // month-day (5 day Forecast)
+        } else {
+            dateTxt = details.dt_txt.substring(5, 16); // month-day hour:minutes (Forecast Every 3 Hours)
+        }
+        const columnDate = `<td>${dateTxt}</td>`;
+        const columnDescription = `<td><img src="http://openweathermap.org/img/w/${details.weather[0].icon}.png" class="descriptionImg img-fluid" alt="${description}" title="${description}"></td>`;
+        const columnTemperature = `<td>${details.main.temp}&deg;C</td>`;
+        const columnHumidity = `<td>${details.main.humidity}%</td>`;
+        const columnMinTemperature = `<td>${details.main.temp_min}&deg;C</td>`;
+        const columnMaxTemperature = `<td>${details.main.temp_max}&deg;C</td>`;
+
+        const newRowContent = `<tr id="${dateTxt}"> ${columnDate} ${columnDescription} ${columnTemperature} ${columnHumidity} ${columnMinTemperature} ${columnMaxTemperature}</tr>`;
+        tbody_forecast.append(newRowContent);
+    }
+
+    function change_tbody_CursorTo(cursorType) {
         if (cursorType === "pointer") {
             $('tbody').css('cursor', 'pointer');
         } else {
@@ -147,18 +161,8 @@ function App($) {
         }
     }
 
-    function handleError404() {
-        backButtonDisplay(false);
-        tableOutput.animate({ opacity: 0 }, 0);
-        tbody_forecast.empty();
-        forecastForCity.html("No results found. Please try a different location").animate({ opacity: 1 }, 1000);
-    }
-
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-
-    function clearSessionStorage() {
-        sessionStorage.clear();
-    }
+    // HTML handling End
 }
