@@ -11,7 +11,7 @@ body {
     margin-left: auto;
 }
 
-#forecastForCity, #tableOutput {
+#forecastLocation, #tableOutput {
     opacity: 0;
 }
 
