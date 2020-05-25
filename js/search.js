@@ -33,45 +33,46 @@ function App($) {
             const options = {
                 url: URL,
                 statusCode: { 404: handleError404 },
-                success: show5dayForecast
+                success: show5dayForecast_Page
             };
             Smartjax.ajax(options);
         } else {
-            getDataFromSessionStorage(URL);
+            const dataFromSessionStorage = JSON.parse(sessionStorage.getItem(URL));
+            show5dayForecast_Page(dataFromSessionStorage);
         }
         window.timer = setTimeout(clearSessionStorage, 300000); // Clear after 5 minutes
     }
 
-    function show5dayForecast(data) {
-        const days = getDates(data);
+    function show5dayForecast_Page(data) {
         weatherData = data;
+        preparePage();
+        showForecastLocation(data, true);
+        show5dayForecast(data);
+        $("tbody > tr").on("click", handleDateSelection);
+    }
+
+    function preparePage() {
         tbody_forecast.empty();
-
-        populateForecastLocation(data, true);
-        days.forEach(day => {
-            const dayDetails = getDetailsForDate(data.list, day);
-            populateTableWith(dayDetails[0], true);
-        });
-
-        $("tbody > tr").on("click", handleTheSelectedDate);
         tableOutput.css('opacity', '1');
         change_tbody_CursorTo("pointer");
         backButtonDisplay(false);
     }
 
-    function getDataFromSessionStorage(URL) {
-        const dataFromSessionStorage = JSON.parse(sessionStorage.getItem(URL));
-        show5dayForecast(dataFromSessionStorage);
+    function show5dayForecast(data) {
+        const days = getDates(data);
+        days.forEach(day => {
+            const dayDetails = getDetailsForDate(data.list, day);
+            populateTableWith(dayDetails[0], true);
+        });
     }
 
     function show3HourForecastForThe(selectedDate) {
         const dayDetails = getDetailsForDate(weatherData.list, selectedDate);
-        tbody_forecast.empty();
         dayDetails.forEach(hourDetails => { populateTableWith(hourDetails, false); });
     }
 
     function handleBackButton() {
-        show5dayForecast(weatherData);
+        show5dayForecast_Page(weatherData);
     }
 
     function getDates(data) {
@@ -96,8 +97,9 @@ function App($) {
         return dateDetails;
     }
 
-    function handleTheSelectedDate() {
+    function handleDateSelection() {
         const selectedDate = $(this).closest('tr').attr('id');
+        tbody_forecast.empty();
         change_tbody_CursorTo("default_");
         backButtonDisplay(true);
         show3HourForecastForThe(selectedDate);
@@ -111,12 +113,12 @@ function App($) {
         backButtonDisplay(false);
         tableOutput.animate({ opacity: 0 }, 0);
         tbody_forecast.empty();
-        populateForecastLocation(false);
+        showForecastLocation(false);
     }
 
     // HTML handling Start
 
-    function populateForecastLocation(data, successfulAPIcall) {
+    function showForecastLocation(data, successfulAPIcall) {
         let text;
         if (successfulAPIcall) {
             text = `<h2>Weather forecast for ${data.city.name}, ${data.city.country}</h2>`;
